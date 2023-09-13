@@ -6,7 +6,7 @@
 #include "../include/file.h"
 #include "../include/shift_cipher.h"
 
-#define SHIFT_DISP "Shift: decipher %d, encipher %d\n"
+#define SHIFT_DISP "Shift: %d\n"
 #define CONTROLS_DISP "Press J/K to shift the text, Q to quit"
 
 void draw_text(WINDOW *win, char *text, int r, int c) {
@@ -14,16 +14,13 @@ void draw_text(WINDOW *win, char *text, int r, int c) {
   getmaxyx(win, rows, columns);
 
   int i = 0;
-  for (int row = r; row < rows - 1; row++) {
-    for (int col = c; col < columns - 2; col++) {
-      if (text[i] == ' ' || text[i] == '\n') {
-        i++;
-      }
+  for (int row = r; row < rows; row++) {
+    for (int col = c; col < columns; col++) {
       if (text[i] == '\0') {
         return;
       }
 
-      mvwaddch(win, 1 + row, 1 + col, text[i]);
+      mvwaddch(win, row, col, text[i]);
       i++;
     }
   }
@@ -32,7 +29,7 @@ void draw_text(WINDOW *win, char *text, int r, int c) {
 void redraw_screen(char *file, char *cipher_buffer, int shift,
                    WINDOW *cipher_pane) {
   clear();
-  printw(SHIFT_DISP, shift, 26 - shift);
+  printw(SHIFT_DISP, shift);
 
   shift_cipher(file, cipher_buffer, shift, ENCIPHER);
   mvprintw(1, 0, "%s", CONTROLS_DISP);

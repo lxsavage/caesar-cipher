@@ -6,10 +6,11 @@ enum SHIFT_MODE { ENCIPHER, DECIPHER };
 /**
  * Shift a message using a Caesar cipher.
  * @param message The message to shift.
+ * @param out The output buffer.
  * @param shift The number of characters to shift.
  * @param mode The mode of the cipher (encipher or decipher).
- * @return The shifted message.
  */
-char *shift_cipher(char *message, int shift, enum SHIFT_MODE mode);
+void shift_cipher(const char *message, char *out, int shift,
+                  enum SHIFT_MODE mode);
 
 #endif

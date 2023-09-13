@@ -1,17 +1,29 @@
 #include "../include/shift_cipher.h"
+#include <stdio.h>
+#include <string.h>
 
-char *shift_cipher(char *message, int shift, enum SHIFT_MODE mode) {
+void shift_cipher(const char *message, char *out, int shift,
+                  enum SHIFT_MODE mode) {
+  out = memcpy(out, message, strlen(message) + 1);
+  if (sizeof(message) != sizeof(out)) {
+    perror("message and out must be the same size");
+    return;
+  }
+
+  // Find the offset for the shift
   int offset = shift;
   if (mode == DECIPHER) {
     offset = 26 - shift;
   }
 
-  for (int i = 0; message[i] != '\0'; i++) {
-    if (message[i] >= 'a' && message[i] <= 'z') {
-      message[i] = (message[i] - 'a' + offset) % 26 + 'a';
-    } else if (message[i] >= 'A' && message[i] <= 'Z') {
-      message[i] = (message[i] - 'A' + offset) % 26 + 'A';
+  for (int i = 0; out[i] != '\0'; i++) {
+    // Uppercase: 65 - 90
+    if (out[i] >= 65 && out[i] <= 90) {
+      char capital_index = out[i] - 65;
+      out[i] = (capital_index + offset) % 26 + 97;
+    } else if (out[i] >= 97 && out[i] <= 122) {
+      char lowercase_index = out[i] - 97;
+      out[i] = (lowercase_index + offset) % 26 + 97;
     }
   }
-  return message;
 }
