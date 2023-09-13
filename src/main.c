@@ -13,18 +13,23 @@ void draw_text(WINDOW *win, char *text, int r, int c) {
   int rows, columns;
   getmaxyx(win, rows, columns);
 
-  int i = 0;
-  for (int row = r; row < rows - 1; row++) {
-    for (int col = c; col < columns - 2; col++) {
-      if (text[i] == ' ' || text[i] == '\n') {
-        i++;
+  // Write text to the window, with a padding of 1 character to keep the border
+  int text_index = 0;
+  for (int row = r + 1; row < rows - 1; row++) {
+    for (int col = c + 1; col < columns - 2; col++) {
+      // Skip spaces and newlines
+      if (text[text_index] == ' ' || text[text_index] == '\n') {
+        text_index++;
       }
-      if (text[i] == '\0') {
+
+      // If we've reached the end of the text, stop writing
+      if (text[text_index] == '\0') {
         return;
       }
 
-      mvwaddch(win, 1 + row, 1 + col, text[i]);
-      i++;
+      // Write the character to the window
+      mvwaddch(win, row, col, text[text_index]);
+      text_index++;
     }
   }
 }
@@ -32,7 +37,7 @@ void draw_text(WINDOW *win, char *text, int r, int c) {
 void redraw_screen(char *file, char *cipher_buffer, int shift,
                    WINDOW *cipher_pane) {
   clear();
-  printw(SHIFT_DISP, shift, 26 - shift);
+  printw(SHIFT_DISP, shift, (26 - shift) % 26);
 
   shift_cipher(file, cipher_buffer, shift, ENCIPHER);
   mvprintw(1, 0, "%s", CONTROLS_DISP);
