@@ -6,6 +6,8 @@
 #include "../include/file.h"
 #include "../include/shift_cipher.h"
 
+#define GROUPING_SIZE 5
+
 #define SHIFT_DISP "Shift: decipher %d, encipher %d\n"
 #define CONTROLS_DISP "Press J/K to shift the text, Q to quit"
 
@@ -16,7 +18,7 @@ void draw_text(WINDOW *win, char *text, int r, int c) {
   // Write text to the window, with a padding of 1 character to keep the border
   int text_index = 0;
   for (int row = r + 1; row < rows - 1; row++) {
-    for (int col = c + 1; col < columns - 2; col++) {
+    for (int col = c + 1; col < columns - 1; col++) {
       // Skip spaces and newlines
       if (text[text_index] == ' ' || text[text_index] == '\n') {
         text_index++;
@@ -55,7 +57,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  char *file = read_file(argv[1]);
+  char *file = read_file(argv[1], WITH_SPACES);
   char *cipher = malloc(strlen(file) + 1);
   if (file == NULL) {
     perror("Error reading file!\n");
